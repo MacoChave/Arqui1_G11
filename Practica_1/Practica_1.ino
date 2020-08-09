@@ -294,7 +294,7 @@ const int espacio[8][8] =   {
                             };
 
 int orientation = 0; // 0:IZQUIERDA | 1: DERECHA 
-int msgSpeed = 5; // VELOCIDAD DE MENSAJE
+int msgSpeed = 100; // VELOCIDAD DE MENSAJE
 int leftPixel = 0; // AREA A EXTRAER
 int currentLetter = 0; // LETRA ACTUAL
 
@@ -339,7 +339,7 @@ void setup() {
 void loop() {
     if (digitalRead(minSpeed) == HIGH) increaseSpeed();
     if (digitalRead(maxSpeed) == HIGH) decreaseSpeed();
-    delay(100);
+    delay(2);
 
     if (digitalRead(toggle) == HIGH) toggleMsgOrientation();
     
@@ -350,11 +350,11 @@ void loop() {
  * CONFIGURACIONES RECIBIDAS
  */
 void increaseSpeed() {
-    if (msgSpeed <= 100) msgSpeed += 10;
+    if (msgSpeed > 20) msgSpeed -= 20;
 }
 
 void decreaseSpeed() {
-    if (msgSpeed > 10) msgSpeed -= 10;
+    if (msgSpeed <= 200) msgSpeed += 20;
 }
 
 void toggleMsgOrientation() {
@@ -427,365 +427,320 @@ void mensaje() {
                                     {0, 0, 0, 0, 0, 0, 0, 0}
                                 };
 
-    int row_aux = 0; // CONTADOR DE FILA DE SIGUIENTE LETRA
-    
-    for (int i = 0, row = leftPixel; i < 8; i++, row++) {
-        for (int j = 0; j < 8; j++) {
+    for (int i = 0; i < 8; i++) {
+        int nextColNum = 8 - leftPixel;
+        for (int j = 0, colNum = leftPixel; j < 8; j++, colNum++) {
             switch (currentLetter) {
-                case 0: // LETRA G
+                case 0: // LETRA T
                 {
-                    if (row < 8) {
+                    if (colNum < 8) {
                         // LETRA ACTUAL
-                        caracter[i][j] = letra_G[row][j];
-                        caracter_driver[i][j] = num_1[row][j];
+                        caracter[i][j] = letra_T[i][colNum];
+                        caracter_driver[i][j] = letra_P[i][colNum];
                     }
-                    else {
-                        // SIGUIENTE LETRA
-                        caracter[i][j] = num_1[row_aux][j];
-                        caracter_driver[i][j] = num_7[row_aux][j];
+
+                    if (colNum > 0 && nextColNum < 8) {
+                        caracter[i][nextColNum] = letra_P[i][colNum - 1];
+                        caracter_driver[i][nextColNum] = num_1[i][colNum - 1];
                     }
                     break;
                 }
-                case 1: // LETRA 1
+                case 1: // LETRA P
                 {
-                    if (row < 8) {
+                    if (colNum < 8) {
                         // LETRA ACTUAL
-                        caracter[i][j] = num_1[row][j];
-                        caracter_driver[i][j] = num_7[row][j];
+                        caracter[i][j] = letra_P[i][colNum];
+                        caracter_driver[i][j] = num_1[i][colNum];
                     }
-                    else {
-                        // SIGUIENTE LETRA
-                        caracter[i][j] = num_7[row_aux][j];
-                        caracter_driver[i][j] = guion[row_aux][j];
+
+                    if (colNum > 0 && nextColNum < 8) {
+                        caracter[i][nextColNum] = num_1[i][colNum - 1];
+                        caracter_driver[i][nextColNum] = guion[i][colNum - 1];
                     }
                     break;
                 }
-                case 2: // LETRA 7
+                case 2: // NUMERO 1
                 {
-                    if (row < 8) {
+                    if (colNum < 8) {
                         // LETRA ACTUAL
-                        caracter[i][j] = num_7[row][j];
-                        caracter_driver[i][j] = guion[row][j];
+                        caracter[i][j] = num_1[i][colNum];
+                        caracter_driver[i][j] = guion[i][colNum];
                     }
-                    else {
-                        // SIGUIENTE LETRA
-                        caracter[i][j] = guion[row_aux][j];
-                        caracter_driver[i][j] = letra_S[row_aux][j];
+
+                    if (colNum > 0 && nextColNum < 8) {
+                        caracter[i][nextColNum] = guion[i][colNum - 1];
+                        caracter_driver[i][nextColNum] = letra_G[i][colNum - 1];
                     }
                     break;
                 }
-                case 3: // LETRA -
+                case 3: // GUION
                 {
-                    if (row < 8) {
+                    if (colNum < 8) {
                         // LETRA ACTUAL
-                        caracter[i][j] = guion[row][j];
-                        caracter_driver[i][j] = letra_S[row][j];
+                        caracter[i][j] = guion[i][colNum];
+                        caracter_driver[i][j] = letra_G[i][colNum];
                     }
-                    else {
-                        // SIGUIENTE LETRA
-                        caracter[i][j] = letra_S[row_aux][j];
-                        caracter_driver[i][j] = letra_E[row_aux][j];
+
+                    if (colNum > 0 && nextColNum < 8) {
+                        caracter[i][nextColNum] = letra_G[i][colNum - 1];
+                        caracter_driver[i][nextColNum] = letra_R[i][colNum - 1];
                     }
                     break;
                 }
-                case 4: // LETRA S
+                case 4: // LETRA G
                 {
-                    if (row < 8) {
+                    if (colNum < 8) {
                         // LETRA ACTUAL
-                        caracter[i][j] = letra_S[row][j];
-                        caracter_driver[i][j] = letra_E[row][j];
+                        caracter[i][j] = letra_G[i][colNum];
+                        caracter_driver[i][j] = letra_R[i][colNum];
                     }
-                    else {
-                        // SIGUIENTE LETRA
-                        caracter[i][j] = letra_E[row_aux][j];
-                        caracter_driver[i][j] = letra_C[row_aux][j];
+
+                    if (colNum > 0 && nextColNum < 8) {
+                        caracter[i][nextColNum] = letra_R[i][colNum - 1];
+                        caracter_driver[i][nextColNum] = letra_U[i][colNum - 1];
                     }
                     break;
                 }
-                case 5: // LETRA E
+                case 5: // LETRA R
                 {
-                    if (row < 8) {
+                    if (colNum < 8) {
                         // LETRA ACTUAL
-                        caracter[i][j] = letra_E[row][j];
-                        caracter_driver[i][j] = letra_C[row][j];
+                        caracter[i][j] = letra_R[i][colNum];
+                        caracter_driver[i][j] = letra_U[i][colNum];
                     }
-                    else {
-                        // SIGUIENTE LETRA
-                        caracter[i][j] = letra_C[row_aux][j];
-                        caracter_driver[i][j] = letra_C[row_aux][j];
+
+                    if (colNum > 0 && nextColNum < 8) {
+                        caracter[i][nextColNum] = letra_U[i][colNum - 1];
+                        caracter_driver[i][nextColNum] = letra_P[i][colNum - 1];
                     }
                     break;
                 }
-                case 6: // LETRA C
+                case 6: // LETRA U
                 {
-                    if (row < 8) {
+                    if (colNum < 8) {
                         // LETRA ACTUAL
-                        caracter[i][j] = letra_C[row][j];
-                        caracter_driver[i][j] = letra_C[row][j];
+                        caracter[i][j] = letra_U[i][colNum];
+                        caracter_driver[i][j] = letra_P[i][colNum];
                     }
-                    else {
-                        // SIGUIENTE LETRA
-                        caracter[i][j] = letra_C[row_aux][j];
-                        caracter_driver[i][j] = letra_I[row_aux][j];
+
+                    if (colNum > 0 && nextColNum < 8) {
+                        caracter[i][nextColNum] = letra_P[i][colNum - 1];
+                        caracter_driver[i][nextColNum] = letra_O[i][colNum - 1];
                     }
                     break;
                 }
-                case 7: // LETRA C
+                case 7: // LETRA P
                 {
-                    if (row < 8) {
+                    if (colNum < 8) {
                         // LETRA ACTUAL
-                        caracter[i][j] = letra_C[row][j];
-                        caracter_driver[i][j] = letra_I[row][j];
+                        caracter[i][j] = letra_P[i][colNum];
+                        caracter_driver[i][j] = letra_O[i][colNum];
                     }
-                    else {
-                        // SIGUIENTE LETRA
-                        caracter[i][j] = letra_I[row_aux][j];
-                        caracter_driver[i][j] = letra_O[row_aux][j];
+
+                    if (colNum > 0 && nextColNum < 8) {
+                        caracter[i][nextColNum] = letra_O[i][colNum - 1];
+                        caracter_driver[i][nextColNum] = espacio[i][colNum - 1];
                     }
                     break;
                 }
-                case 8: // LETRA I
+                case 8: // LETRA O
                 {
-                    if (row < 8) {
+                    if (colNum < 8) {
                         // LETRA ACTUAL
-                        caracter[i][j] = letra_I[row][j];
-                        caracter_driver[i][j] = letra_O[row][j];
+                        caracter[i][j] = letra_O[i][colNum];
+                        caracter_driver[i][j] = espacio[i][colNum];
                     }
-                    else {
-                        // SIGUIENTE LETRA
-                        caracter[i][j] = letra_O[row_aux][j];
-                        caracter_driver[i][j] = letra_N[row_aux][j];
+
+                    if (colNum > 0 && nextColNum < 8) {
+                        caracter[i][nextColNum] = espacio[i][colNum - 1];
+                        caracter_driver[i][nextColNum] = num_1[i][colNum - 1];
                     }
                     break;
                 }
-                case 9: // LETRA O
+                case 9: // ESPACIO
                 {
-                    if (row < 8) {
+                    if (colNum < 8) {
                         // LETRA ACTUAL
-                        caracter[i][j] = letra_O[row][j];
-                        caracter_driver[i][j] = letra_N[row][j];
+                        caracter[i][j] = espacio[i][colNum];
+                        caracter_driver[i][j] = num_1[i][colNum];
                     }
-                    else {
-                        // SIGUIENTE LETRA
-                        caracter[i][j] = letra_N[row_aux][j];
-                        caracter_driver[i][j] = espacio[row_aux][j];
+
+                    if (colNum > 0 && nextColNum < 8) {
+                        caracter[i][nextColNum] = num_1[i][colNum - 1];
+                        caracter_driver[i][nextColNum] = guion[i][colNum - 1];
                     }
                     break;
                 }
-                case 10: // LETRA N
+                case 10: // NUMERO 1
                 {
-                    if (row < 8) {
+                    if (colNum < 8) {
                         // LETRA ACTUAL
-                        caracter[i][j] = letra_N[row][j];
-                        caracter_driver[i][j] = espacio[row][j];
+                        caracter[i][j] = num_1[i][colNum];
+                        caracter_driver[i][j] = guion[i][colNum];
                     }
-                    else {
-                        // SIGUIENTE LETRA
-                        caracter[i][j] = espacio[row_aux][j];
-                        caracter_driver[i][j] = letra_A[row_aux][j];
+
+                    if (colNum > 0 && nextColNum < 8) {
+                        caracter[i][nextColNum] = guion[i][colNum - 1];
+                        caracter_driver[i][nextColNum] = letra_S[i][colNum - 1];
                     }
                     break;
                 }
-                case 11: // LETRA 
+                case 11: // GUION
                 {
-                    if (row < 8) {
+                    if (colNum < 8) {
                         // LETRA ACTUAL
-                        caracter[i][j] = espacio[row][j];
-                        caracter_driver[i][j] = letra_A[row][j];
+                        caracter[i][j] = guion[i][colNum];
+                        caracter_driver[i][j] = letra_S[i][colNum];
                     }
-                    else {
-                        // SIGUIENTE LETRA
-                        caracter[i][j] = letra_A[row_aux][j];
-                        caracter_driver[i][j] = guion[row_aux][j];
+
+                    if (colNum > 0 && nextColNum < 8) {
+                        caracter[i][nextColNum] = letra_S[i][colNum - 1];
+                        caracter_driver[i][nextColNum] = letra_E[i][colNum - 1];
                     }
                     break;
                 }
-                case 12: // LETRA A
+                case 12: // LETRA S
                 {
-                    if (row < 8) {
+                    if (colNum < 8) {
                         // LETRA ACTUAL
-                        caracter[i][j] = letra_A[row][j];
-                        caracter_driver[i][j] = guion[row][j];
+                        caracter[i][j] = letra_S[i][colNum];
+                        caracter_driver[i][j] = letra_E[i][colNum];
                     }
-                    else {
-                        // SIGUIENTE LETRA
-                        caracter[i][j] = guion[row_aux][j];
-                        caracter_driver[i][j] = letra_P[row_aux][j];
+
+                    if (colNum > 0 && nextColNum < 8) {
+                        caracter[i][nextColNum] = letra_E[i][colNum - 1];
+                        caracter_driver[i][nextColNum] = letra_C[i][colNum - 1];
                     }
                     break;
                 }
-                case 13: // LETRA -
+                case 13: // LETRA E
                 {
-                    if (row < 8) {
+                    if (colNum < 8) {
                         // LETRA ACTUAL
-                        caracter[i][j] = guion[row][j];
-                        caracter_driver[i][j] = letra_P[row][j];
+                        caracter[i][j] = letra_E[i][colNum];
+                        caracter_driver[i][j] = letra_C[i][colNum];
                     }
-                    else {
-                        // SIGUIENTE LETRA
-                        caracter[i][j] = letra_P[row_aux][j];
-                        caracter_driver[i][j] = letra_R[row_aux][j];
+
+                    if (colNum > 0 && nextColNum < 8) {
+                        caracter[i][nextColNum] = letra_C[i][colNum - 1];
+                        caracter_driver[i][nextColNum] = letra_C[i][colNum - 1];
                     }
                     break;
                 }
-                case 14: // LETRA P
+                case 14: // LETRA C
                 {
-                    if (row < 8) {
+                    if (colNum < 8) {
                         // LETRA ACTUAL
-                        caracter[i][j] = letra_P[row][j];
-                        caracter_driver[i][j] = letra_R[row][j];
+                        caracter[i][j] = letra_C[i][colNum];
+                        caracter_driver[i][j] = letra_C[i][colNum];
                     }
-                    else {
-                        // SIGUIENTE LETRA
-                        caracter[i][j] = letra_R[row_aux][j];
-                        caracter_driver[i][j] = letra_A[row_aux][j];
+
+                    if (colNum > 0 && nextColNum < 8) {
+                        caracter[i][nextColNum] = letra_C[i][colNum - 1];
+                        caracter_driver[i][nextColNum] = letra_I[i][colNum - 1];
                     }
                     break;
                 }
-                case 15: // LETRA R
+                case 15: // LETRA C
                 {
-                    if (row < 8) {
+                    if (colNum < 8) {
                         // LETRA ACTUAL
-                        caracter[i][j] = letra_R[row][j];
-                        caracter_driver[i][j] = letra_A[row][j];
+                        caracter[i][j] = letra_C[i][colNum];
+                        caracter_driver[i][j] = letra_I[i][colNum];
                     }
-                    else {
-                        // SIGUIENTE LETRA
-                        caracter[i][j] = letra_R[row_aux][j];
-                        caracter_driver[i][j] = letra_C[row_aux][j];
+
+                    if (colNum > 0 && nextColNum < 8) {
+                        caracter[i][nextColNum] = letra_I[i][colNum - 1];
+                        caracter_driver[i][nextColNum] = letra_O[i][colNum - 1];
                     }
                     break;
                 }
-                case 16: // LETRA A
+                case 16: // LETRA I
                 {
-                    if (row < 8) {
+                    if (colNum < 8) {
                         // LETRA ACTUAL
-                        caracter[i][j] = letra_A[row][j];
-                        caracter_driver[i][j] = letra_C[row][j];
+                        caracter[i][j] = letra_I[i][colNum];
+                        caracter_driver[i][j] = letra_O[i][colNum];
                     }
-                    else {
-                        // SIGUIENTE LETRA
-                        caracter[i][j] = letra_C[row_aux][j];
-                        caracter_driver[i][j] = letra_T[row_aux][j];
+
+                    if (colNum > 0 && nextColNum < 8) {
+                        caracter[i][nextColNum] = letra_O[i][colNum - 1];
+                        caracter_driver[i][nextColNum] = letra_N[i][colNum - 1];
                     }
                     break;
                 }
-                case 17: // LETRA C
+                case 17: // LETRA O
                 {
-                    if (row < 8) {
+                    if (colNum < 8) {
                         // LETRA ACTUAL
-                        caracter[i][j] = letra_C[row][j];
-                        caracter_driver[i][j] = letra_T[row][j];
+                        caracter[i][j] = letra_O[i][colNum];
+                        caracter_driver[i][j] = letra_N[i][colNum];
                     }
-                    else {
-                        // SIGUIENTE LETRA
-                        caracter[i][j] = letra_T[row_aux][j];
-                        caracter_driver[i][j] = letra_I[row_aux][j];
+
+                    if (colNum > 0 && nextColNum < 8) {
+                        caracter[i][nextColNum] = letra_N[i][colNum - 1];
+                        caracter_driver[i][nextColNum] = espacio[i][colNum - 1];
                     }
                     break;
                 }
-                case 18: // LETRA T
+                case 18: // LETRA N
                 {
-                    if (row < 8) {
+                    if (colNum < 8) {
                         // LETRA ACTUAL
-                        caracter[i][j] = letra_T[row][j];
-                        caracter_driver[i][j] = letra_I[row][j];
+                        caracter[i][j] = letra_N[i][colNum];
+                        caracter_driver[i][j] = espacio[i][colNum];
                     }
-                    else {
-                        // SIGUIENTE LETRA
-                        caracter[i][j] = letra_I[row_aux][j];
-                        caracter_driver[i][j] = letra_C[row_aux][j];
+
+                    if (colNum > 0 && nextColNum < 8) {
+                        caracter[i][nextColNum] = espacio[i][colNum - 1];
+                        caracter_driver[i][nextColNum] = letra_A[i][colNum - 1];
                     }
                     break;
                 }
-                case 19: // LETRA I
+                case 19: // ESPACIO
                 {
-                    if (row < 8) {
+                    if (colNum < 8) {
                         // LETRA ACTUAL
-                        caracter[i][j] = letra_I[row][j];
-                        caracter_driver[i][j] = letra_C[row][j];
+                        caracter[i][j] = espacio[i][colNum];
+                        caracter_driver[i][j] = letra_A[i][colNum];
                     }
-                    else {
-                        // SIGUIENTE LETRA
-                        caracter[i][j] = letra_C[row_aux][j];
-                        caracter_driver[i][j] = letra_A[row_aux][j];
+
+                    if (colNum > 0 && nextColNum < 8) {
+                        caracter[i][nextColNum] = letra_A[i][colNum - 1];
+                        caracter_driver[i][nextColNum] = espacio[i][colNum - 1];
                     }
                     break;
                 }
-                case 20: // LETRA C
+                case 20: // LETRA A
                 {
-                    if (row < 8) {
+                    if (colNum < 8) {
                         // LETRA ACTUAL
-                        caracter[i][j] = letra_C[row][j];
-                        caracter_driver[i][j] = letra_A[row][j];
+                        caracter[i][j] = letra_A[i][colNum];
+                        caracter_driver[i][j] = espacio[i][colNum];
                     }
-                    else {
-                        // SIGUIENTE LETRA
-                        caracter[i][j] = letra_A[row_aux][j];
-                        caracter_driver[i][j] = espacio[row_aux][j];
+
+                    if (colNum > 0 && nextColNum < 8) {
+                        caracter[i][nextColNum] = espacio[i][colNum - 1];
+                        caracter_driver[i][nextColNum] = letra_T[i][colNum - 1];
                     }
                     break;
                 }
-                case 21: // LETRA A
+                case 21: // ESPACIO 
                 {
-                    if (row < 8) {
+                    if (colNum < 8) {
                         // LETRA ACTUAL
-                        caracter[i][j] = letra_A[row][j];
-                        caracter_driver[i][j] = espacio[row][j];
+                        caracter[i][j] = espacio[i][colNum];
+                        caracter_driver[i][j] = letra_T[i][colNum];
                     }
-                    else {
-                        // SIGUIENTE LETRA
-                        caracter[i][j] = espacio[row_aux][j];
-                        caracter_driver[i][j] = num_1[row_aux][j];
-                    }
-                    break;
-                }
-                case 22: // LETRA 
-                {
-                    if (row < 8) {
-                        // LETRA ACTUAL
-                        caracter[i][j] = espacio[row][j];
-                        caracter_driver[i][j] = num_1[row][j];
-                    }
-                    else {
-                        // SIGUIENTE LETRA
-                        caracter[i][j] = num_1[row_aux][j];
-                        caracter_driver[i][j] = espacio[row_aux][j];
-                    }
-                    break;
-                }
-                case 23: // LETRA 1
-                {
-                    if (row < 8) {
-                        // LETRA ACTUAL
-                        caracter[i][j] = num_1[row][j];
-                        caracter_driver[i][j] = espacio[row][j];
-                    }
-                    else {
-                        // SIGUIENTE LETRA
-                        caracter[i][j] = espacio[row_aux][j];
-                        caracter_driver[i][j] = letra_G[row_aux][j];
-                    }
-                    break;
-                }
-                case 24: // LETRA 
-                {
-                    if (row < 8) {
-                        // LETRA ACTUAL
-                        caracter[i][j] = espacio[row][j];
-                        caracter_driver[i][j] = letra_G[row][j];
-                    }
-                    else {
-                        // SIGUIENTE LETRA
-                        caracter[i][j] = letra_G[row_aux][j];
-                        caracter_driver[i][j] = num_1[row_aux][j];
+
+                    if (colNum > 0 && nextColNum < 8) {
+                        caracter[i][nextColNum] = letra_T[i][colNum - 1];
+                        caracter_driver[i][nextColNum] = letra_P[i][colNum - 1];
                     }
                     break;
                 }
             }
-        }
-        if (row >= 8) {
-            row_aux++;
+            nextColNum++;
         }
     }
 
@@ -795,20 +750,20 @@ void mensaje() {
     caracter_aMano(caracter);
     
     if (orientation == 0) {
-        // HACIA ARRIBA
+        // DERECHA 
         leftPixel++;
         if (leftPixel > 7) {
             leftPixel = 0;
-            if (currentLetter == 24) currentLetter = 0;
+            if (currentLetter == 21) currentLetter = 0;
             else currentLetter ++;
         }
     }
     else {
-        // HACIA ABAJO
+        // IZQUIERDA 
         leftPixel--;
         if (leftPixel < 0) {
             leftPixel = 7;
-            if (currentLetter == 0) currentLetter = 24;
+            if (currentLetter == 0) currentLetter = 21;
             else currentLetter--;
         }
     }
