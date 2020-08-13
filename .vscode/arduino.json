@@ -1,0 +1,6 @@
+{
+    "board": "arduino:avr:mega",
+    "configuration": "cpu=atmega2560",
+    "sketch": "Practica_1\\Practica_1.ino",
+    "programmer": "ArduinoISP"
+}
